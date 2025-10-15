@@ -1,0 +1,56 @@
+class Main {
+    static final int N = 1000;
+
+    static int[][] dp = new int[N][N];  // Dynamic programming table for storing maximum profits
+    static int[][] sell = new int[N][N];  // Table for storing information about when to sell
+
+    static int maxProfit(int price[], int n) {
+        // Initialize the diagonal elements of the tables
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = n * price[i];  // If only one year is left, sell at the current price
+            sell[i][i] = 0;  // Mark as 'beg' (beginning) because only one year is left
+        }
+
+        // Calculate the maximum profit for different lengths of the subarray
+        for (int len = 1; len < n; len++) {
+            for (int i = 0; i < n - len; i++) {
+                int j = i + len;
+                int year = n - (j - i);  // Calculate the current year
+
+                int x = price[i] * year + dp[i + 1][j];  // Sell at the current year price and calculate the profit for remaining subarray
+                int y = price[j] * year + dp[i][j - 1];  // Sell at the last year price and calculate the profit for remaining subarray
+
+                // Choose the option that gives maximum profit
+                if (x >= y) {
+                    dp[i][j] = x;  // Maximum profit if we sell at the current price
+                    sell[i][j] = 0;  // Mark as 'beg' (beginning) because we sell at the current price
+                } else {
+                    dp[i][j] = y;  // Maximum profit if we sell at the last year price
+                    sell[i][j] = 1;  // Mark as 'end' because we sell at the last year price
+                }
+            }
+        }
+
+        // Determine the sequence of selling 'beg' and 'end'
+        int i = 0, j = n - 1;
+        while (i <= j) {
+            if (sell[i][j] == 0) {
+                System.out.print("beg ");
+                i++;
+            } else {
+                System.out.print("end ");
+                j--;
+            }
+        }
+        System.out.println();
+
+        return dp[0][n - 1];  // Return the maximum profit for the entire array
+    }
+
+    public static void main(String args[]) {
+        int price[] = {2, 4, 6, 2, 5};
+        int n = price.length;
+        int ans = maxProfit(price, n);
+        System.out.println(ans);
+    }
+}

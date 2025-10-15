@@ -1,0 +1,36 @@
+// User function Template for Java
+
+class Solution {
+    public int totalWays(int N, int M, int obstacleGrid[][]) {
+        // Code here
+        
+     int m=obstacleGrid.length;
+        int n=obstacleGrid[0].length;
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[m - 1][n - 1] == 1) {
+            return 0;
+        }
+        int mod = 1_000_000_007;
+        int arr[][]=new int[2][n+1];
+        arr[0][n-1]=1;
+        int t=m-1;
+        while(t>=0){
+            for(int i=n-1;i>=0;i--){
+                if(obstacleGrid[t][i]==1){
+                    arr[0][i]=0;
+                }
+                else if(t==m-1 && i==n-1){
+                     arr[0][i]=1;
+                }
+               
+                else{
+                    arr[0][i]=(arr[0][i+1] + arr[1][i]) % mod;
+                }
+            }
+            for(int i=0;i<n;i++){
+                arr[1][i]=arr[0][i];
+            }
+            t--;
+        }
+        return arr[0][0];
+    }
+}
