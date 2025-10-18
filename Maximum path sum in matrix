@@ -1,0 +1,45 @@
+// User function Template for Java
+class Solution {
+    public int maximumPath(int[][]grid) {
+        // code here
+      
+     int m=grid.length;
+        int n=grid[0].length;
+        if (m == 1) {
+            int maxInRow = Integer.MIN_VALUE;
+            for (int i = 0; i < n; i++) {
+                maxInRow = Math.max(maxInRow, grid[0][i]);
+            }
+            return maxInRow;
+        }
+        int arr[][]=new int[2][n+2];
+        for(int i=0;i<n+2;i++){
+            if(i==0 || i==n+1){
+                arr[1][i]=Integer.MIN_VALUE;
+            }
+            else{
+                arr[1][i]=grid[m-1][i-1];
+        }
+        }
+        int t=m-2;
+        while(t>=0){
+            for(int i=0;i<=n+1;i++){
+                if(i==0 || i==n+1){
+                    arr[0][i]=Integer.MIN_VALUE;
+                }
+                else{
+                    arr[0][i]=Math.max(arr[1][i-1],Math.max(arr[1][i],arr[1][i+1]))+grid[t][i-1];
+                }
+            }
+            for(int i=0;i<=n+1;i++){
+                arr[1][i]=arr[0][i];
+            }
+            t--;
+        }
+        int ans=Integer.MIN_VALUE;
+        for(int i=1;i<=n;i++){
+            ans=Math.max(ans,arr[0][i]);
+        }
+        return ans;
+    }
+}
